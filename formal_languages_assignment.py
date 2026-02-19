@@ -1,9 +1,16 @@
-# Name: Cristina Wood
-# Date: January 7, 2026
+# Name: Cristina Elisabet Garcia Wood
+# Student ID: W01411485
+# Date Started: January 7, 2026
+# Date Finished: February 18, 2026
 # Title: Assignment 1, Formal Languages and Automata
 
+# ///////////////////////////////////////////////////////////////////////////////////////////////
+# ///////////////////////////////////////////////////////////////////////////////////////////////
 
+# ------------------------------------
 # Task 1 - language membership testing
+# ------------------------------------
+
 # implement a function that determines if a string belongs to a language.
 
 # L = {a^n * b^n | n >= 1} over alphabet {a, b}
@@ -26,7 +33,7 @@
 
 
 # create function that inputs string and returns boolean
-def is_in_language(s: str) -> bool:
+def is_in_language_L(s: str) -> bool:
 
     # //////// variables //////////
     a_count = 0
@@ -73,16 +80,12 @@ def is_in_language(s: str) -> bool:
     # rule that a quantity must be equal to be quantity
     return a_count == b_count
 
-# TEST task 1 (input array of strings into function)
-# tests = ['ab', 'aabb', 'aaabbb', 'aabbb', 'aba', 'bbb', 'aaa', '', 'a', 'b', 'aabbab']
-#
-# for t in tests:
-#     print(t, is_in_language(t))
+# ///////////////////////////////////////////////////////////////////////////////////////////////
+# ///////////////////////////////////////////////////////////////////////////////////////////////
 
-
-
-
+# -------------------------------
 # Task 2 Kleene closure generator
+# -------------------------------
 
 # GOAL: find all words in language given rules
 # create function where input is base language and its max length (['a', 'bb', etc.], 4)
@@ -127,25 +130,13 @@ def kleene_closure_generator(base_language, max_length):
 
     return result
 
-# print(sorted(
-#     kleene_closure_generator(['a', 'bb'], 4),
-#     key=lambda x: (len(x), x)
-# ))
+# ///////////////////////////////////////////////////////////////////////////////////////////////
+# ///////////////////////////////////////////////////////////////////////////////////////////////
 
-# Test Task 2: Kleene closure
-# result = kleene_closure_generator(["a"], 3)
-# expected = {"", "a", "aa", "aaa"}
-# assert result == expected
-#
-# result2 = kleene_closure_generator(["ab"], 4)
-# assert "" in result2
-# assert "ab" in result2
-# assert "abab" in result2
-# assert len([s for s in result2 if len(s) <= 4]) >= 3
-
-
-
+# -------------------------------------
 # Task 3 Recursive Language Definitions
+# -------------------------------------
+
 # get language M (as function) that reads in n as repetitions of recursion
 # wrap y and z around it n times by calling itself n times
 # each time it is called, decrement 'n', that way it doesn't loop infinitely
@@ -168,13 +159,13 @@ def generate_recursive_language_M(n: int) -> str:
     # call function *recursively* 'u'
     return "y" + generate_recursive_language_M(n - 1) + "z"
 
-#quick checks
-# print(generate_recursive_language_M(0)) # x
-# print(generate_recursive_language_M(1)) # yxz
-# print(generate_recursive_language_M(2)) # yyxzz
-# print(generate_recursive_language_M(3)) # yyyxzzz
+# ///////////////////////////////////////////////////////////////////////////////////////////////
+# ///////////////////////////////////////////////////////////////////////////////////////////////
 
+# --------------------------
 # Task 4 Regular Expressions
+# --------------------------
+
 # GOAL: return TRUE if string matches regex pattern
 
 # create function where user inputs pattern, and string
@@ -208,6 +199,8 @@ def regex_match(pattern, string):
 
     # Kleene star (only on single char: a*)
     # -- if the second character is a *, and the pattern continues on past *, check following characters and match
+    # ++ had to get ChatGPT's help with syntax and logic of Kleene star. I modified bits of it, and added my own
+    #    personal notes for understanding.
     if len(pattern) >= 2 and pattern[1] == "*":
         char = pattern[0]
 
@@ -218,7 +211,7 @@ def regex_match(pattern, string):
             if regex_match(pattern[2:], string[i:]):
                 return True
 
-            # stop if no more matching chars
+            # stop if no more matching characters
             if i >= len(string) or string[i] != char:
                 return False
 
@@ -233,6 +226,54 @@ def regex_match(pattern, string):
 
     # if it is anything else not checked.. fall back on false.
     return False
+
+# ///////////////////////////////////////////////////////////////////////////////////////////////
+# ///////////////////////////////////////////////////////////////////////////////////////////////
+# ///////////////////////////////////////////////////////////////////////////////////////////////
+
+# ~~~~ Test Calls ~~~~
+def test_assignment():
+    # Test Task 1: Language L membership
+    assert is_in_language_L("ab") == True
+    assert is_in_language_L("aabb") == True
+    assert is_in_language_L("aaabbb") == True
+    assert is_in_language_L("aabbb") == False
+    assert is_in_language_L("aba") == False
+    assert is_in_language_L("") == False
+    assert is_in_language_L("a") == False
+    assert is_in_language_L("b") == False
+
+    # Test Task 2: Kleene closure
+    result = kleene_closure_generator(["a"], 3)
+    expected = {"", "a", "aa", "aaa"}
+    assert result == expected
+
+    result2 = kleene_closure_generator(["ab"], 4)
+    assert "" in result2
+    assert "ab" in result2
+    assert "abab" in result2
+    assert len([s for s in result2 if len(s) <= 4]) >= 3
+
+    # Test Task 3: Recursive language
+    assert generate_recursive_language_M(0) == "x"
+    assert generate_recursive_language_M(1) == "yxz"
+    assert generate_recursive_language_M(2) == "yyxzz"
+    assert generate_recursive_language_M(3) == "yyyxzzz"
+
+    # Test Task 4: Regular expressions
+    assert regex_match("a*", "") == True
+    assert regex_match("a*", "aaa") == True
+    assert regex_match("a*b", "aaab") == True
+    assert regex_match("a|b", "a") == True
+    assert regex_match("a|b", "c") == False
+    assert regex_match("ab", "ab") == True
+    assert regex_match("ab", "a") == False
+
+    print("All tests passed!")
+
+
+if __name__ == "__main__":
+    test_assignment()
 
 
 
